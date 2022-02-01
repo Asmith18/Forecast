@@ -18,6 +18,7 @@ class DayDetailsViewController: UIViewController {
     @IBOutlet weak var currentDescriptionLabel: UILabel!
     
     //MARK: - Properties
+    var days = [Day]()
    
     //MARK: - View Lifecyle
     override func viewDidLoad() {
@@ -25,10 +26,25 @@ class DayDetailsViewController: UIViewController {
         
         dayForcastTableView.dataSource = self
         dayForcastTableView.delegate = self
+        
+        NetworkController.fetchDays { days in
+            guard let days = days else {return}
+            self.days = days
+            
+            DispatchQueue.main.async {
+                self.updateViews(index: 0)
+                self.dayForcastTableView.reloadData()
+            }
+        }
     }
     
-    func updateViews() {
-        
+    func updateViews(index: Int) {
+        let currentDay = days[index]
+        cityNameLabel.text = currentDay.cityName
+        currentDescriptionLabel.text = currentDay.decsription
+        currentLowLabel.text = "\(currentDay.ltemp) F"
+        currentHighLabel.text = "\(currentDay.htemp) F"
+        currentTempLabel.text = "\(currentDay.temp) F"
     }
     
 }// End of class
@@ -36,11 +52,12 @@ class DayDetailsViewController: UIViewController {
 //MARK: - Extenstions
 extension DayDetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 16
+        return days.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "dayCell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "dayCell", for: indexPath) as? DayForcastTableViewCell else {return UITableViewCell()}
+        cell.updateViews(day: days[indexPath.row])
         
         return cell
     }

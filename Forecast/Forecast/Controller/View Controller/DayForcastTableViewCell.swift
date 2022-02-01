@@ -13,8 +13,10 @@ class DayForcastTableViewCell: UITableViewCell {
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var forcastedHighLabel: UILabel!
     
-    func updateViews() {
-        
+    func updateViews(day: Day) {
+        dayNameLabel.text = day.date
+        iconImageView.image = UIImage(named: day.icon)
+        forcastedHighLabel.text = "\(day.htemp)"
     }
 
 } // End of class
