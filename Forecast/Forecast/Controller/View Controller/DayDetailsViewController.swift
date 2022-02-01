@@ -18,6 +18,7 @@ class DayDetailsViewController: UIViewController {
     @IBOutlet weak var currentDescriptionLabel: UILabel!
     
     //MARK: - Properties
+    //daeclaring a variable called days and setting it to type of an array of day whicvh is our model and initializing it
     var days = [Day]()
    
     //MARK: - View Lifecyle
@@ -27,6 +28,7 @@ class DayDetailsViewController: UIViewController {
         dayForcastTableView.dataSource = self
         dayForcastTableView.delegate = self
         
+        // calling our model controller and using . syntax to call our fetch so it will display all the information we created in the scope of fetch in our model controller.
         NetworkController.fetchDays { days in
             guard let days = days else {return}
             self.days = days
@@ -39,6 +41,7 @@ class DayDetailsViewController: UIViewController {
     }
     
     func updateViews(index: Int) {
+        // setting that value of our outlets to their specified variable and making the double variables a string so they will display as a string when we load our app
         let currentDay = days[index]
         cityNameLabel.text = currentDay.cityName
         currentDescriptionLabel.text = currentDay.decsription
@@ -52,11 +55,13 @@ class DayDetailsViewController: UIViewController {
 //MARK: - Extenstions
 extension DayDetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // this line of codes means it will display the numbewr of cells as the same number of days we have in our api
         return days.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "dayCell", for: indexPath) as? DayForcastTableViewCell else {return UITableViewCell()}
+        // using .syntax to call our updateviews we declared in our table view cell file.
         cell.updateViews(day: days[indexPath.row])
         
         return cell

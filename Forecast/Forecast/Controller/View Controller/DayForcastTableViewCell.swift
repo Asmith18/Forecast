@@ -14,6 +14,7 @@ class DayForcastTableViewCell: UITableViewCell {
     @IBOutlet weak var forcastedHighLabel: UILabel!
     
     func updateViews(day: Day) {
+        // we are setting our outlets to their proper variable or image so they will display on our app.
         dayNameLabel.text = day.date
         iconImageView.image = UIImage(named: day.icon)
         forcastedHighLabel.text = "\(day.htemp)"
